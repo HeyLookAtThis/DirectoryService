@@ -2,11 +2,11 @@
 using DirectoryService.Domain.Shared;
 using DirectoryService.Domain.ValueObjects;
 
-namespace DirectoryService.Domain.Posotions;
+namespace DirectoryService.Domain.Positions;
 
 public sealed class Position
 {
-    private List<Guid> _departments;
+    private List<DepartmentPosition> _departments = new();
     
     private Position(Guid id, Name name, Description description)
     {
@@ -16,8 +16,6 @@ public sealed class Position
         IsActive = true;
         CreateAt = DateTime.UtcNow;
         UpdateAt = CreateAt;
-
-        _departments = new List<Guid>();
     }
 
     public Guid Id { get; private set; }
@@ -32,7 +30,7 @@ public sealed class Position
 
     public DateTime UpdateAt { get; private set; }
 
-    public List<Guid> Departments => _departments;
+    public IReadOnlyList<DepartmentPosition> Departments => _departments;
 
     public static Result<Position, Error> Create(string name, string? description)
     {
@@ -59,14 +57,23 @@ public sealed class Position
     
     public void AddDepartment(Guid departmentId)
     {
-        _departments.Add(departmentId);
+        _departments.Add(new DepartmentPosition(departmentId, Id));
         Update();
     }
 
-    public void RemoveDepartment(Guid departmentId)
+    public Result<bool, Error> TryToRemovePosition(Guid departmentId)
     {
-        _departments.Remove(departmentId);
-        Update();
+        var removingDepartmentPosition =
+            _departments.FirstOrDefault(departmentPosition => departmentPosition.DepartmentId == departmentId);
+
+        if (removingDepartmentPosition != null)
+        {
+            _departments.Remove(removingDepartmentPosition);
+            Update();
+            return true;
+        }
+
+        return Error.NotFound("position " + Id, "отсутствует подразделение " + departmentId, "position");
     }
 
     private void Update() => UpdateAt = DateTime.UtcNow;

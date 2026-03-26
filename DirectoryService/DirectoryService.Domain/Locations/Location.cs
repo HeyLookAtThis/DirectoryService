@@ -6,7 +6,7 @@ namespace DirectoryService.Domain.Locations;
 
 public sealed class Location
 {
-    private List<Guid> _departments;
+    private List<DepartmentLocation> _departments = new();
     
     private Location(Guid id, Name name, Address address, Timezone timezone)
     {
@@ -17,8 +17,6 @@ public sealed class Location
         IsActive = true;
         CreateAt = DateTime.UtcNow;
         UpdateAt = CreateAt;
-
-        _departments = new List<Guid>();
     }
 
     public Guid Id { get; }
@@ -35,7 +33,7 @@ public sealed class Location
 
     public DateTime UpdateAt { get; private set; }
 
-    public IReadOnlyList<Guid> Departments => _departments;
+    public IReadOnlyList<DepartmentLocation> Departments => _departments;
 
     public static Result<Location, Error> Create(
         string name,
@@ -80,14 +78,23 @@ public sealed class Location
 
     public void AddDepartment(Guid departmentId)
     {
-        _departments.Add(departmentId);
+        _departments.Add(new DepartmentLocation(departmentId, Id));
         Update();
     }
 
-    public void RemoveDepartment(Guid departmentId)
+    public Result<bool, Error> TryToRemoveDepartment(Guid departmentId)
     {
-        _departments.Remove(departmentId);
-        Update();
+        var removingDepartmentLocation =
+            _departments.FirstOrDefault(departmentLocation => departmentLocation.DepartmentId == departmentId);
+
+        if (removingDepartmentLocation != null)
+        {
+            _departments.Remove(removingDepartmentLocation);
+            Update();
+            return true;
+        }
+
+        return Error.NotFound("location " + Id, "отсутствует подразделение " + departmentId, "location");
     }
 
     private void Update() => UpdateAt = DateTime.UtcNow;
