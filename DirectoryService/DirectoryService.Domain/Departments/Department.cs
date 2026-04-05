@@ -3,12 +3,18 @@ using DirectoryService.Domain.Shared;
 using DirectoryService.Domain.ValueObjects;
 using Path = DirectoryService.Domain.ValueObjects.Path;
 
+
 namespace DirectoryService.Domain.Departments;
 
 public sealed class Department
 {
     private List<DepartmentLocation> _locations = new();
     private List<DepartmentPosition> _positions = new();
+    
+    // EF core
+    private Department()
+    {
+    }
     
     private Department(Guid id, Name name, Identifier identifier, Guid? parentId, Path path, Depth depth)
     {

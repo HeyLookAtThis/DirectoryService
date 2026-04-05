@@ -7,6 +7,11 @@ public record Name
 {
     private const int MIN_LENGTH = 3;
     private const int MAX_LENGTH = 150;
+    
+    // EF core
+    private Name()
+    {
+    }
 
     private Name(string value) => Value = value;
 

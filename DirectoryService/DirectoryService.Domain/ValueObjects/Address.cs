@@ -6,6 +6,11 @@ namespace DirectoryService.Domain.ValueObjects;
 public record Address
 {
     private const int POSTAL_CODE_LENGTH = 6;
+    
+    // EF Core
+    private Address()
+    {
+    }
 
     private Address(
         short postalCode,

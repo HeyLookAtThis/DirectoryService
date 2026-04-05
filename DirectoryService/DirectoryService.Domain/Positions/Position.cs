@@ -8,6 +8,11 @@ public sealed class Position
 {
     private List<DepartmentPosition> _departments = new();
     
+    // EF Core
+    private Position()
+    {
+    }
+    
     private Position(Guid id, Name name, Description description)
     {
         Id = id;

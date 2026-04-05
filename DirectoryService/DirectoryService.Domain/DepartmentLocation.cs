@@ -2,6 +2,11 @@
 
 public record DepartmentLocation
 {
+    // EF core
+    private DepartmentLocation()
+    {
+    }
+    
     public DepartmentLocation(Guid departmentId, Guid locationId)
     {
         DepartmentId = departmentId;

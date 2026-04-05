@@ -6,6 +6,11 @@ namespace DirectoryService.Domain.ValueObjects;
 public record Description
 {
     private const int MAX_LENGTH = 1000;
+    
+    // EF Core
+    private Description()
+    {
+    }
 
     private Description(string? description) => Value = description;
 

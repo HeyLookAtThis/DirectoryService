@@ -7,6 +7,11 @@ public record Identifier
 {
     private const int MIN_LENGTH = 3;
     private const int MAX_LENGTH = 150;
+    
+    // EF core
+    private Identifier()
+    {
+    }
 
     private Identifier(string value) => Value = value;
 
