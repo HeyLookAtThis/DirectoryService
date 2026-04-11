@@ -10,7 +10,12 @@ public class PositionConfiguration : IEntityTypeConfiguration<Position>
     {
         builder.ToTable("positions");
         
-        builder.HasKey(p => p.Id).HasName("pk_positions");
+        builder.Property(p => p.Id)
+            .IsRequired()
+            .HasColumnName("id");
+        
+        builder.HasKey(p => p.Id)
+            .HasName("pk_positions");
         
         builder.ComplexProperty(p => p.Name, nb =>
         {
@@ -26,18 +31,16 @@ public class PositionConfiguration : IEntityTypeConfiguration<Position>
                 .HasColumnName("description");
         });
         
-        builder.Property(p => p.IsActive).IsRequired().HasColumnName("is_active");
+        builder.Property(p => p.IsActive)
+            .IsRequired()
+            .HasColumnName("is_active");
         
-        builder.Property(p => p.CreateAt).IsRequired().HasColumnName("create_at");
+        builder.Property(p => p.CreateAt)
+            .IsRequired()
+            .HasColumnName("create_at");
 
-        builder.Property(p => p.UpdateAt).IsRequired().HasColumnName("update_at");
-        
-        builder.OwnsMany(p => p.Departments, nb =>
-        {
-            nb.ToJson("departments");
-
-            nb.Property(dp => dp.DepartmentId).IsRequired();
-            nb.Property(dp => dp.PositionId).IsRequired();
-        });
+        builder.Property(p => p.UpdateAt)
+            .IsRequired()
+            .HasColumnName("update_at");
     }
 }

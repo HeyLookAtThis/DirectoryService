@@ -10,7 +10,12 @@ public class LocationConfiguration: IEntityTypeConfiguration<Location>
     {
         builder.ToTable("locations");
         
-        builder.HasKey(l => l.Id).HasName("pk_locations");
+        builder.Property(l => l.Id)
+            .IsRequired()
+            .HasColumnName("id");
+        
+        builder.HasKey(l => l.Id)
+            .HasName("pk_locations");
 
         builder.ComplexProperty(l => l.Name, nb =>
         {
@@ -21,29 +26,25 @@ public class LocationConfiguration: IEntityTypeConfiguration<Location>
 
         builder.ComplexProperty(l => l.Address, nb =>
         {
+            nb.ToJson("address");
+
             nb.Property(a => a.PostalСode)
-                .IsRequired()
-                .HasColumnName("postal_code");
+                .IsRequired();
 
             nb.Property(a => a.Country)
-                .IsRequired()
-                .HasColumnName("country");
+                .IsRequired();
 
             nb.Property(a => a.Region)
-                .IsRequired()
-                .HasColumnName("region");
+                .IsRequired();
 
             nb.Property(a => a.City)
-                .IsRequired()
-                .HasColumnName("city");
+                .IsRequired();
 
             nb.Property(a => a.Street)
-                .IsRequired()
-                .HasColumnName("street");
+                .IsRequired();
 
             nb.Property(a => a.House)
-                .IsRequired()
-                .HasColumnName("house");
+                .IsRequired();
         });
 
         builder.ComplexProperty(l => l.Timezone, nb =>
@@ -53,18 +54,16 @@ public class LocationConfiguration: IEntityTypeConfiguration<Location>
                 .HasColumnName("time_zone");
         });
         
-        builder.Property(l => l.IsActive).IsRequired().HasColumnName("is_active");
+        builder.Property(l => l.IsActive)
+            .IsRequired()
+            .HasColumnName("is_active");
         
-        builder.Property(l => l.CreateAt).IsRequired().HasColumnName("create_at");
+        builder.Property(l => l.CreateAt)
+            .IsRequired()
+            .HasColumnName("create_at");
 
-        builder.Property(l => l.UpdateAt).IsRequired().HasColumnName("update_at");
-        
-        builder.OwnsMany(l => l.Departments, nb =>
-        {
-            nb.ToJson("departments");
-
-            nb.Property(dl => dl.DepartmentId).IsRequired();
-            nb.Property(dl => dl.LocationId).IsRequired();
-        });
+        builder.Property(l => l.UpdateAt)
+            .IsRequired()
+            .HasColumnName("update_at");
     }
 }

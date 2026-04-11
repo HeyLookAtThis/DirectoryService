@@ -11,8 +11,13 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
     {
         builder.ToTable("departments");
         
-        builder.HasKey(d => d.Id).HasName("pk_departments");
-
+        builder.Property(d => d.Id)
+            .IsRequired()
+            .HasColumnName("id");
+        
+        builder.HasKey(d => d.Id)
+            .HasName("pk_departments");
+        
         builder.ComplexProperty(d => d.Name, nb =>
         {
             nb.Property(n => n.Value)
@@ -27,7 +32,9 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
                 .HasColumnName("identifier");
         });
 
-        builder.Property(d => d.ParentId).IsRequired(false).HasColumnName("parent_id");
+        builder.Property(d => d.ParentId)
+            .IsRequired(false)
+            .HasColumnName("parent_id");
 
         builder.ComplexProperty(d => d.Path, nb =>
         {
@@ -43,26 +50,16 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
                 .HasColumnName("depth");
         });
 
-        builder.Property(d => d.IsActive).IsRequired().HasColumnName("is_active");
+        builder.Property(d => d.IsActive)
+            .IsRequired()
+            .HasColumnName("is_active");
 
-        builder.Property(d => d.CreateAt).IsRequired().HasColumnName("create_at");
+        builder.Property(d => d.CreateAt)
+            .IsRequired()
+            .HasColumnName("create_at");
 
-        builder.Property(d => d.UpdateAt).IsRequired().HasColumnName("update_at");
-
-        builder.OwnsMany(d => d.Locations, nb =>
-        {
-            nb.ToJson("locations");
-
-            nb.Property(dl => dl.DepartmentId).IsRequired();
-            nb.Property(dl => dl.LocationId).IsRequired();
-        });
-        
-        builder.OwnsMany(d => d.Positions, nb =>
-        {
-            nb.ToJson("positions");
-
-            nb.Property(dp => dp.DepartmentId).IsRequired();
-            nb.Property(dp => dp.PositionId).IsRequired();
-        });
+        builder.Property(d => d.UpdateAt)
+            .IsRequired()
+            .HasColumnName("update_at");
     }
 }
