@@ -3,6 +3,11 @@
 public record Depth
 {
     private const short DEFAULT_VALUE = 1;
+    
+    // EF core
+    private Depth()
+    {
+    }
 
     public Depth(Path path)
     {

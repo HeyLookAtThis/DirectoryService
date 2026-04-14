@@ -8,6 +8,11 @@ public sealed class Location
 {
     private List<DepartmentLocation> _departments = new();
     
+    // EF Core
+    private Location()
+    {
+    }
+    
     private Location(Guid id, Name name, Address address, Timezone timezone)
     {
         Id = id;
